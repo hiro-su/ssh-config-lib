@@ -1,8 +1,11 @@
-# Ssh::Config::Lib
-
+# SSH::Config::LIB
 sshの設定ファイルを編集するためのライブラリです。
 - update
 - generate(作成予定)
+- cmdline tool(実装中)
+
+## 動作環境
+- ruby 1.8.7, 1.9.2 or higher
 
 ## インストール
 
