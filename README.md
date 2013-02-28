@@ -13,7 +13,7 @@ sshの設定ファイルを編集するためのライブラリです。
 
 
 ## 使い方 
-以下のスクリプトを実行します
+以下ようなのスクリプトを作成します
 
     # exec.rb
     require "ssh-config-lib"
@@ -29,6 +29,7 @@ sshの設定ファイルを編集するためのライブラリです。
     Update.config = "config"
     Update.run api_data
 
+実行
 
     $ ruby exec.rb
     
