@@ -30,7 +30,7 @@ module SSH
           end
           hash
         rescue TypeError => ex
-          raise @config.nil? ? "Please input config file" : ex
+          raise config.nil? ? "Please input config file" : ex
         end
 
         def update hash={}, api_data={}
