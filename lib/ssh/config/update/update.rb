@@ -6,9 +6,9 @@ module SSH
     module Update
       class << self
         attr_writer :config
-        def read
+        def read config=@config
           hash = {}
-          open(@config, "r") do |file|
+          open(config, "r") do |file|
             i,count= 0,0
             arr = [*file].map{|e| e.chomp!.split(" ", 2)}.flatten
             arr.delete ""
@@ -49,7 +49,7 @@ module SSH
           raise ex
         end
 
-        def write hash={}
+        def write hash={}, config=@config
           data = ""
           hash.each_value do |v_hash|
             v_hash.each do |key, value|
@@ -58,9 +58,9 @@ module SSH
             end
             data << "\n"
           end
-          if File.exists?(@config)
-            FileUtils.mv @config, "#{@config}.#{Time.now.to_i}.bak"
-            File.open(@config, "w") {|file| file.write data.chomp }
+          if File.exists?(config)
+            FileUtils.mv config, "#{config}.#{Time.now.to_i}.bak"
+            File.open(config, "w") {|file| file.write data.chomp }
           end
         rescue => ex
           raise ex
