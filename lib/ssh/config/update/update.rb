@@ -1,11 +1,45 @@
 #encoding: utf-8
 require "fileutils"
+require "diff/lcs"
 
 module SSH
   module Config
     module Update
       class << self
         attr_writer :config
+
+        def run api_data={}
+          write update(read, api_data)
+        end
+
+        def dry_run api_data={}                                  
+          data = ""                                              
+          update(read, api_data).each_value do |v_hash|                            
+            v_hash.each do |key, value|                          
+              key = key =~ /^Host$/i ? key : format("%-13s", key)
+              data << "#{key} #{value}\n"                        
+            end                                                  
+            data << "\n"                                         
+          end                                                    
+          puts data.chomp                                        
+        rescue => ex                                             
+          raise ex                                               
+        end                                                      
+
+        def diff old_conf, cur_conf=@config
+          raise "Please input config file" if old_conf.nil? || cur_conf.nil?
+          load_conf = lambda do |conf|
+            open(conf, "r") do |lines|
+              lines.map{|line| line unless line.chomp!.empty?}
+            end
+          end
+          Diff::LCS.diff load_conf.call(cur_conf), load_conf.call(old_conf)
+        rescue => ex
+          raise ex
+        end
+
+        private
+
         def read config=@config
           hash = {}
           open(config, "r") do |file|
@@ -64,10 +98,6 @@ module SSH
           end
         rescue => ex
           raise ex
-        end
-
-        def run api_data={}
-          write update(read, api_data)
         end
       end
     end
